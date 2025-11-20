@@ -1,0 +1,38 @@
+{
+    "info": {
+        "name": "Order Execution Engine",
+        "_postman_id": "order-exec-engine",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Execute Order",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"type\":\"market\",\"tokenIn\":\"TOKENA\",\"tokenOut\":\"TOKENB\",\"amount\":100}"
+                },
+                "url": {
+                    "raw": "http://localhost:3000/api/orders/execute",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000",
+                    "path": [
+                        "api",
+                        "orders",
+                        "execute"
+                    ]
+                }
+            }
+        }
+    ]
+}

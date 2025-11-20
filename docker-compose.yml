@@ -1,0 +1,42 @@
+
+services:
+  # --- Redis Service ---
+  redis:
+    image: 'redis:7-alpine'
+    ports:
+      - '6379:6379'
+    command: redis-server --maxmemory-policy noeviction
+  # --- PostgreSQL Service ---
+  postgres:
+    image: 'postgres:15-alpine'
+    ports:
+      - '5432:5432' # Map host port 5432 to container port 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: LpXLQ6a38dj
+      POSTGRES_DB: orderdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Volume for persistent data
+    # Healthcheck ensures the database is ready before any dependent services start
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- Your Application Service (Example) ---
+  # NOTE: You must replace 'your_app_image' with your actual Docker image or 'build: .'
+  #       and update the ports and command to match your setup.
+  app:
+    build: .
+    ports: 
+    - '3000:3000' # Your application port
+    env_file: .env 
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+volumes:
+  postgres_data:
