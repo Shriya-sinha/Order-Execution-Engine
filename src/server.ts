@@ -6,22 +6,30 @@ import { initDb } from './db';
 import './worker/orderWorker';
 dotenv.config();
 
-const fastify = Fastify({ logger: true });
-fastify.register(websocketPlugin as any);
+export function buildServer() {
+  const fastify = Fastify({ logger: true });
 
-fastify.register(ordersRoutes);
+  // must be before routes
+  fastify.register(websocketPlugin as any);
+  fastify.register(ordersRoutes);
 
-const port = Number(process.env.PORT || 3000);
+  return fastify;
+}
 
-const start = async () => {
-  try {
-    await initDb();
-    await fastify.listen({ port, host: '0.0.0.0' });
-    console.log(`listening ${port}`);
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
-  }
-};
+const server = buildServer();
 
-start();
+export default server;
+
+if (require.main === module) {
+  const port = Number(process.env.PORT || 3000);
+  (async () => {
+    try {
+      await initDb();
+      await server.listen({ port, host: '0.0.0.0' });
+      console.log(`listening on ${port}`);
+    } catch (err) {
+      console.error(err);
+      process.exit(1);
+    }
+  })();
+}

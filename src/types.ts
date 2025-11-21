@@ -1,3 +1,9 @@
+import { WebSocket } from 'ws';
+
+interface FastifyWsConnection {
+  socket: WebSocket;
+}
+
 export type OrderStatus = 'pending' | 'routing' | 'building' | 'submitted' | 'confirmed' | 'failed';
 
 export interface OrderPayload {

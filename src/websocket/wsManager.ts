@@ -11,8 +11,13 @@ export function unbindWs(orderId: string) {
   map.delete(orderId);
 }
 
-export function sendStatus(orderId: string, status: OrderStatus, payload: any = {}) {
+export function sendStatus(
+  orderId: string,
+  status: OrderStatus,
+  payload: any = {}
+) {
   const ws = map.get(orderId);
-  if (!ws || ws.readyState !== ws.OPEN) return;
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+
   ws.send(JSON.stringify({ orderId, status, ...payload }));
 }
